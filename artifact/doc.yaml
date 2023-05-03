@@ -1,0 +1,58 @@
+openapi: 3.0.3
+info:
+  title: VisitorStat
+  description: Сервис хранения статистики посетителей
+  version: 0.1.0
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: statistics
+    description: Everything about visitor statistics
+paths:
+  /statistics:
+    post:
+      tags:
+        - statistics
+      summary: increment visitor statistics
+      operationId: updateStatistics
+      requestBody:
+        description: update visitors count by country
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateVisitorStatistics'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: something wrong
+    get:
+      tags:
+        - statistics
+      summary: get visitor statistics
+      operationId: getStatistics
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VisitorStatistics'
+        '400':
+          description: something wrong
+components:
+  schemas:
+    UpdateVisitorStatistics:
+      type: object
+      properties:
+        country:
+          type: string
+          example: 'cy'
+    VisitorStatistics:
+      type: object
+      additionalProperties:
+        type: string
+      example:
+        cy: 10
+        fr: 20
