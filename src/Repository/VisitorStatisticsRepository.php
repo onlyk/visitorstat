@@ -10,16 +10,24 @@ use Predis\ClientException;
 
 final class VisitorStatisticsRepository
 {
+    private const VISITOR_STATISTICS_KEY = 'stat';
+    private const STATISTICS_INCREMENT = 1;
+
     public function __construct(
         private Client $redis
     ) {}
 
     /** @throw ClientException */
-    public function increase($country): void
+    public function increaseH($country): void
     {
-        $this->redis->incr($country);
+        $this->redis->hincrby(self::VISITOR_STATISTICS_KEY, $country, self::STATISTICS_INCREMENT);
     }
 
+    public function increase($country): void
+    {
+        $some = 1;
+        $this->redis->incr($country);
+    }
     /** @throw ClientException */
     public function getVisitorStatistics(): VisitorStatistics
     {
