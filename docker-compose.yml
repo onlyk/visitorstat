@@ -6,11 +6,10 @@ services:
         image: redis:5-alpine
         ports: [6379:6379]
     php:
-      image: 'bitnami/php-fpm:latest'
+      build: .
       volumes:
         - ./artifact/dev/php-fpm.conf:/opt/bitnami/php/etc/php-fpm.d/www.conf
         - ./artifact/dev/php.conf:/opt/bitnami/php/etc/conf.d/custom.ini
-        - .:/app
       depends_on:
         - redis
       deploy:
@@ -29,8 +28,7 @@ services:
         volumes:
             - ./artifact/dev/nginx.conf:/etc/nginx/conf.d/default.conf
             - ./artifact/dev/original.conf:/etc/nginx/nginx.conf
-            - ./var/log/nginx:/var/log/nginx
-            - .:/app
+            - ./public:/app/public
         depends_on:
             - php
         links:
