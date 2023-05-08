@@ -19,7 +19,7 @@ final class UpdateVisitorStatisticsHandler
     public function increaseVisitorStatistics(string $country): void
     {
         try {
-            $this->visitorStatisticsRepository->increase($country);
+            $this->visitorStatisticsRepository->increaseH($country);
         } catch (ClientException $clientException) {
             $this->logger->error(json_encode(['country' => $country, 'exception' =>$clientException->getMessage()]));
             throw $clientException;

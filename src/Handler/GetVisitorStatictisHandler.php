@@ -15,7 +15,7 @@ final class GetVisitorStatictisHandler
 
     public function getVisitorStatistics(): VisitorStatistics
     {
-        $visitorStatistics = $this->visitorStatisticsRepository->getVisitorStatistics();
+        $visitorStatistics = $this->visitorStatisticsRepository->getVisitorStatisticsHscan();
 
         return $visitorStatistics;
     }

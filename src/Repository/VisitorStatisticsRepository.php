@@ -6,12 +6,14 @@ namespace App\Repository;
 
 use App\Handler\Components\VisitorStatistics;
 use Predis\Client;
-use Predis\ClientException;
+use Predis\Collection\Iterator\HashKey;
 
 final class VisitorStatisticsRepository
 {
     private const VISITOR_STATISTICS_KEY = 'stat';
     private const STATISTICS_INCREMENT = 1;
+    private const DEFAULT_MATCH = '*';
+    private const DEFALUT_COUNT = 1;
 
     public function __construct(
         private Client $redis
@@ -25,13 +27,28 @@ final class VisitorStatisticsRepository
 
     public function increase($country): void
     {
-        $some = 1;
         $this->redis->incr($country);
     }
+
     /** @throw ClientException */
+    public function getVisitorStatisticsHscan(): VisitorStatistics
+    {
+        $hashKeyIterator = new HashKey(
+            $this->redis,
+            self::VISITOR_STATISTICS_KEY,
+            self::DEFAULT_MATCH,
+            self::DEFALUT_COUNT);
+
+        $visitorStatisticsArray = [];
+        foreach ($hashKeyIterator as $field => $value) {
+            $visitorStatisticsArray[$field] = $value;
+        }
+
+        return new VisitorStatistics($visitorStatisticsArray);
+    }
+        /** @throw ClientException */
     public function getVisitorStatistics(): VisitorStatistics
     {
-        /** @TODO заменить на scan, чтобы меньше отжирало ram */
         $keys = $this->redis->keys('*');
         $visitorStatisticsArray = [];
         foreach ($keys as $key) {
