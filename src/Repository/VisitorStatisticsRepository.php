@@ -13,7 +13,7 @@ final class VisitorStatisticsRepository
     private const VISITOR_STATISTICS_KEY = 'stat';
     private const STATISTICS_INCREMENT = 1;
     private const DEFAULT_MATCH = '*';
-    private const DEFALUT_COUNT = 1;
+    private const DEFALUT_COUNT = 10;
 
     public function __construct(
         private Client $redis
