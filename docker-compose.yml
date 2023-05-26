@@ -5,31 +5,42 @@ services:
     redis:
         image: redis:5-alpine
         ports: [6379:6379]
-    php:
-      build: .
-      volumes:
-        - ./artifact/dev/php-fpm.conf:/opt/bitnami/php/etc/php-fpm.d/www.conf
-        - ./artifact/dev/php.conf:/opt/bitnami/php/etc/conf.d/custom.ini
-      depends_on:
-        - redis
-      deploy:
-        resources:
-          limits:
-            cpus: '8'
-            memory: 1024M
-          reservations:
-            memory: 256M
+#    php:
+#      build: .
+#      volumes:
+#        - ./artifact/dev/php-fpm.conf:/opt/bitnami/php/etc/php-fpm.d/www.conf
+#        - ./artifact/dev/php.conf:/opt/bitnami/php/etc/conf.d/custom.ini
+#      depends_on:
+#        - redis
+#      deploy:
+#        resources:
+#          limits:
+#            cpus: '8'
+#            memory: 1024M
+#          reservations:
+#            memory: 256M
 
-    nginx:
-        image: nginx:stable
-        container_name: nginx.local
+#    nginx:
+#        image: nginx:stable
+#        container_name: nginx.local
+#        ports:
+#            - "8080:80"
+#        volumes:
+#            - ./artifact/dev/nginx.conf:/etc/nginx/conf.d/default.conf
+#            - ./artifact/dev/original.conf:/etc/nginx/nginx.conf
+#            - ./public:/app/public
+#        depends_on:
+#            - php
+#        links:
+#            - php:php.local
+
+    luanginx:
+        build:
+            context: ./
+            dockerfile: ./docker/lua/Dockerfile
+        depends_on:
+            - redis
         ports:
             - "8080:80"
-        volumes:
-            - ./artifact/dev/nginx.conf:/etc/nginx/conf.d/default.conf
-            - ./artifact/dev/original.conf:/etc/nginx/nginx.conf
-            - ./public:/app/public
-        depends_on:
-            - php
-        links:
-            - php:php.local
+
+
